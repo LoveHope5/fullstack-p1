@@ -347,6 +347,8 @@ def edit_artist(artist_id):
     "seeking_venue": artist.seeking_venue,
     "seeking_description":artist.seeking_description,
     "image_link": artist.image_link,
+    "available_from":artist.available_from,
+    "available_to":artist.available_to,
   }
   
   return render_template('forms/edit_artist.html', form=form, artist=artist)
@@ -371,6 +373,8 @@ def edit_artist_submission(artist_id):
     artist.seeking_venue=seeking_venue 
     artist.state = request.form["state"]
     artist.website_link= request.form["website_link"]
+    artist.available_from = request.form["available_from"]
+    artist.available_to = request.form["available_to"]
           
     db.session.commit()
 
@@ -512,6 +516,7 @@ def shows():
       "venue_id": show.venue_id,
       "venue_name":show.venue.name,
       "artist_id": show.artist_id,
+      "artist_name": show.artist.name,
       "artist_image_link": str(show.artist.image_link),
       "start_time": str(show.start_time)
     })
@@ -528,13 +533,27 @@ def create_shows():
 def create_show_submission():
   # called to create new shows in the db, upon submitting new show listing form
   error = False
+  artist_available = False
   try:    
-    show = Show(artist_id= request.form["artist_id"], 
-                  venue_id = request.form["venue_id"], 
-                  start_time = request.form["start_time"], 
-                    )
-    db.session.add(show)
-    db.session.commit()
+    #confirm artist availability
+    artist = Artist.query.get(request.form["artist_id"])
+    start_time =datetime.strptime(request.form["start_time"], '%Y-%m-%d %H:%M:%S')
+    #compare show date with artist availability
+    if start_time >= artist.available_from and start_time <= artist.available_to:
+      artist_available= True
+
+    if artist_available:
+      show = Show(artist_id= request.form["artist_id"], 
+                    venue_id = request.form["venue_id"], 
+                    start_time = request.form["start_time"], 
+                      )
+
+      db.session.add(show)
+      db.session.commit()
+    else:
+      flash('Sorry the artist '+ artist.name + ' is not available within this period.')
+      db.session.close()
+      return render_template('pages/home.html')
 
   except:
     error=True

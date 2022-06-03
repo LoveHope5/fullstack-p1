@@ -27,7 +27,7 @@
 			<i class="fab fa-facebook-f"></i> {% if artist.facebook_link %}<a href="{{ artist.facebook_link }}" target="_blank">{{ artist.facebook_link }}</a>{% else %}No Facebook Link{% endif %}
         </p>
 		<p>
-			<strong> &nbsp;&nbsp;Availability period:</strong> {% if artist.available_from != None and artist.available_to != None  %} From:{{ artist.available_from }}  , To:  {{ artist.available_from }} {% else %}Not Specified{% endif %}
+			<strong> &nbsp;&nbsp;Availability period:</strong> {% if artist.available_from != None and artist.available_to != None  %} From:{{ artist.available_from }}  , To:  {{ artist.available_to }} {% else %}Not Specified{% endif %}
         </p>
 		{% if artist.seeking_venue %}
 		<div class="seeking">
