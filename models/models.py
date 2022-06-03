@@ -38,8 +38,10 @@ class Artist(db.Model):
     seeking_venue = db.Column(db.Boolean,nullable=True,default=False)
     seeking_description = db.Column(db.String(120))
     shows = db.relationship('Show',backref='artist',lazy=True)
-    available_from = db.Column(db.DateTime(), nullable=True)
-    available_to = db.Column(db.DateTime(), nullable=True)
+    available_from = db.Column(db.DateTime(), nullable=True,default="00:00:00")
+    available_to = db.Column(db.DateTime(), nullable=True,default="00:00:00")
+   
+
  
 
 

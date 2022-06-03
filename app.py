@@ -243,6 +243,8 @@ def create_venue_submission():
   
 
  
+# Delete
+# -----------------------------------------------------------------
 
 @app.route('/venues/<venue_id>', methods=['DELETE'])
 def delete_venue(venue_id):
@@ -263,6 +265,28 @@ def delete_venue(venue_id):
     else:
        # on successful db insert, flash success
       flash('Venue  was successfully deleted !')
+    db.session.close()
+  return jsonify({ 'success': True })
+
+@app.route('/artists/<artist_id>', methods=['DELETE'])
+def delete_artist(artist_id):
+  error=False
+  try:
+    
+    Show.query.filter_by(artist_id=artist_id).delete()
+    Artist.query.filter_by(id=artist_id).delete()
+    db.session.commit()
+  except:
+    error=True
+    db.session.rollback()
+    print(sys.exc_info())
+  finally:
+    if error:
+      # on unsuccessful db insert, flash an error instead
+      flash('An error occurred. Artist  could not be deleted.')
+    else:
+       # on successful db insert, flash success
+      flash('Artist  was successfully deleted !')
     db.session.close()
   return jsonify({ 'success': True })
 
@@ -490,7 +514,7 @@ def create_artist_form():
 
 @app.route('/artists/create', methods=['POST'])
 def create_artist_submission():
-  # called upon submitting the new artist listing form
+  #called upon submitting the new artist listing form
   seeking_venue = False
   error = False
  
@@ -526,7 +550,8 @@ def create_artist_submission():
       flash('Artist ' + artist.name + ' was successfully listed!')
     db.session.close()
 
-  return render_template('pages/home.html')
+  return redirect(url_for('index'))
+  
 
 
 #  Shows
@@ -536,7 +561,7 @@ def create_artist_submission():
 def shows():
   # displays list of shows at /shows
   data=[]
-  shows = Show.query.order_by('id').all()
+  shows = Show.query.order_by(desc('id')).all()
   for show in shows:
     data.append({
       "venue_id": show.venue_id,
@@ -561,25 +586,27 @@ def create_show_submission():
   error = False
   artist_available = False
   try:    
+    show = Show(artist_id= request.form["artist_id"], 
+                      venue_id = request.form["venue_id"], 
+                      start_time = request.form["start_time"], 
+                        )
     #confirm artist availability
     artist = Artist.query.get(request.form["artist_id"])
     start_time =datetime.strptime(request.form["start_time"], '%Y-%m-%d %H:%M:%S')
-    #compare show date with artist availability
+    #compare show date with artist availability 
+    
+      
     if start_time >= artist.available_from and start_time <= artist.available_to:
       artist_available= True
 
     if artist_available:
-      show = Show(artist_id= request.form["artist_id"], 
-                    venue_id = request.form["venue_id"], 
-                    start_time = request.form["start_time"], 
-                      )
-
       db.session.add(show)
       db.session.commit()
     else:
       flash('Sorry the artist '+ artist.name + ' is not available within this period.')
       db.session.close()
-      return render_template('pages/home.html')
+      return redirect(url_for('index'))
+   
 
   except:
     error=True
@@ -594,7 +621,7 @@ def create_show_submission():
       flash('Show was successfully listed!')
     db.session.close()
 
-  return render_template('pages/home.html')
+  return redirect(url_for('index'))
 
 @app.errorhandler(404)
 def not_found_error(error):

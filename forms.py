@@ -239,10 +239,15 @@ class ArtistForm(Form):
      )
     available_from = DateTimeField(
             'available_from',
+            validators=[DataRequired()],
+            default= datetime.today()
+            
             
      )
     available_to = DateTimeField(
             'available_to',
+            validators=[DataRequired()],
+            default= datetime.today()
              
      )
 

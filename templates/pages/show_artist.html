@@ -75,7 +75,37 @@
 	</div>
 </section>
 
-<a href="/artists/{{ artist.id }}/edit"><button class="btn btn-primary btn-lg">Edit</button></a>
 
+<div class="row">
+	<div class="col-sm-1">
+		<a href="/artists/{{ artist.id }}/edit"><button class="btn btn-primary btn-lg">Edit</button></a>
+	</div>
+	<div class="col-sm-2">
+		 
+			<button type="submit"  id="delete-button" data-id="{{ artist.id }}" class="btn btn-danger btn-lg btn-block">Delete</button>
+			 
+	</div>
+	<div class="col-sm-8">
+		
+	</div>
+
+</div>
+<script>
+	const deleteBtn = document.getElementById('delete-button');
+	 
+	 
+	  deleteBtn.onclick = function(e) {
+		const artistId = e.target.dataset['id'];
+		fetch('/artists/' + artistId, {
+		  method: 'DELETE'
+		})
+		.then(function() {
+		  console.log('deleted')
+		  window.location="/"
+		})
+	  }
+	
+
+</script>
 {% endblock %}
 
