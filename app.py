@@ -15,6 +15,7 @@ from forms import *
 from flask_migrate import Migrate
 import sys
 from sqlalchemy import func
+from sqlalchemy import desc
 from datetime import date
 
 
@@ -56,7 +57,32 @@ app.jinja_env.filters['datetime'] = format_datetime
 
 @app.route('/')
 def index():
-  return render_template('pages/home.html')
+  #Latest 10 listed Artist and Venues
+  latest_venues=[]
+  latest_artists=[]
+  try:
+    artists =Artist.query.order_by(desc('id')).limit(10).all()
+    for artist in artists:
+      latest_artists.append({
+        "id":artist.id,
+        "name":artist.name,
+        "image_link":artist.image_link
+      })
+    venues =Venue.query.order_by(desc('id')).limit(10).all()
+    for venue in venues:
+      latest_venues.append({
+        "id":venue.id,
+        "name":venue.name,
+        "image_link":venue.image_link
+      })
+  except:
+    error=True
+    print(sys.exc_info())
+  finally:
+    db.session.close()
+
+  
+  return render_template('pages/home.html',latest_artists=latest_artists,latest_venues=latest_venues)
 
 
 #  Venues
