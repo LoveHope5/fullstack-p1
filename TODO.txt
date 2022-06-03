@@ -1,0 +1,28 @@
+1.setup the code     [DONE]
+2.connect to git hub 
+3.The web app should be successfully connected to a PostgreSQL database. [DONE]
+4.There should be no use of mock data throughout the app.[DONE]
+5.when a user submits a new artist record, the user should be able to see it populate in /artists, [DONE]
+5b.as well as search for the artist by name and have the search return results.[DONE]
+6.I should be able to go to the URL `/artist/<artist-id>` to visit a particular artist’s page using a unique ID per artist[DONE]
+7.Venues should continue to be displayed in groups by city and state. [DONE]
+8.Search should be allowed to be partial string matching and case-insensitive.[DONE]
+9.Past shows versus Upcoming shows should be distinguished in Venue and Artist pages.[DONE]
+10.A user should be able to click on the venue for an upcoming show in the Artist's page, and on that Venue's page, see the same show in the Venue Page's upcoming shows section.[DONE]
+12.As a fellow developer on this application, I should be able to run `flask db migrate`, and have my local database (once set up and created) be populated with the right tables[DONE]
+13. The models should be completed (see TODOs in the `Models` section of `app.py`) and model the objects used throughout Fyyur.[DONE]
+14.Define the models in a different file to follow [Separation of Concerns] [DONE]
+15.the right _type_ of relationship and parent-child dynamics between models should be accurately identified[DONE]
+16.The relationship between the models should be accurately configured[DONE]
+
+More
+17. Implement artist availability. An artist can list available times that they can be booked.
+18.Restrict venues from being able to create shows with artists during a show time that is outside of their availability.
+19. Show Recent Listed Artists and Recently Listed Venues on the homepage, 
+20. returning results for Artists and Venues sorting by newly created.
+21.Limit to the 10 most recently listed items.
+22. Implement Search Artists by City and State,
+23.and Search Venues by City and State. 
+24.Searching by "San Francisco, CA" should return all artists or venues in San Francisco, CA.
+
+
